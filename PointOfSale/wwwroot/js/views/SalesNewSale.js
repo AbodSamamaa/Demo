@@ -1,6 +1,7 @@
 ﻿
-let TaxValue = 18;
+let TaxValue = 16;
 let ProductsForSale = [];
+let StoockQTY = 0;
 
 $(document).ready(function () {
 
@@ -60,7 +61,8 @@ $(document).ready(function () {
                             brand: item.brand,
                             category: item.nameCategory,
                             photoBase64: item.photoBase64,
-                            price: parseFloat(item.price)
+                            price: parseFloat(item.price),
+                            quantity: item.quantity
                         }
                     ))
                 };
@@ -103,7 +105,7 @@ $(document).on('select2:open', () => {
 
 $('#cboSearchProduct').on('select2:select', function (e) {
     var data = e.params.data;
-
+    StoockQTY = data.quantity;
     let product_found = ProductsForSale.filter(prod => prod.idProduct == data.id)
     if (product_found.length > 0) {
         $("#cboSearchProduct").val("").trigger('change');
@@ -120,6 +122,19 @@ $('#cboSearchProduct').on('select2:select', function (e) {
         inputPlaceholder: "Enter quantity"
     }, function (value) {
 
+        if (value > StoockQTY) {
+            toastr.warning("", "The stock doesn't have this quantity");
+            return false;
+        }
+        if (value < 0) {
+            toastr.warning("", "Please enter a valid number");
+            return false;
+        }
+        if (value == StoockQTY) {
+            toastr.warning("", "This product will be out of stok");
+            
+        }
+
         if (value === false) return false;
 
         if (value === "") {
@@ -128,7 +143,7 @@ $('#cboSearchProduct').on('select2:select', function (e) {
         }
 
         if (isNaN(parseInt(value))) {
-            toastr.warning("", "You must enter a numeric value");
+            toastr.warning("", "You must enter an integer value");
             return false
         }
 
@@ -144,6 +159,7 @@ $('#cboSearchProduct').on('select2:select', function (e) {
         }
 
         ProductsForSale.push(product)
+
         showProducts_Prices();
 
         $("#cboSearchProduct").val("").trigger('change');

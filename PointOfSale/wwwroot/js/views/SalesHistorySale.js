@@ -26,12 +26,18 @@ $(document).ready(function () {
 
     $("#txtStartDate").datepicker({ dateFormat: 'dd/mm/yy' });
     $("#txtEndDate").datepicker({ dateFormat: 'dd/mm/yy' });
+
+    $('#txtStartDate').val(getCurrentDate());
+    $('#txtEndDate').val(getCurrentDate());
 })
 
 $("#cboSearchBy").change(function () {
 
     if ($("#cboSearchBy").val() == "date") {
         SEARCH_VIEW["searchDate"]();
+        $('#txtStartDate').val(getCurrentDate());
+        $('#txtEndDate').val(getCurrentDate());
+
     } else {
         SEARCH_VIEW["searchSale"]();
     }

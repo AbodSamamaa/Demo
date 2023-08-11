@@ -1,51 +1,28 @@
 ﻿let tableData;
 let rowSelected;
-let pirice;
-let qty;
-let Fixed = 16;
+
 const BASIC_MODEL = {
-    idProduct: 0,
-    barCode: "",
-    brand: "",
+    idTaxes: 0,
+    percentage: "",
     description: "",
-    idCategory: 0,
-    quantity: 0,
-    price: 0,
-    Totalprice: 0,
-    idTax: 0,
-    isActive: 1,
-    photo: ""
+    isFixed: 1,
+    isExternal: 0,
+    isActive: 1
 }
 
 
 $(document).ready(function () {
 
-    fetch("/Inventory/GetCategories")
+    fetch("/Admin/GetRoles")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         }).then(responseJson => {
-            if (responseJson.data.length > 0) {
-
-                responseJson.data.forEach((item) => {
-                    $("#cboCategory").append(
-                        $("<option>").val(item.idCategory).text(item.description)
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#cboRol").append(
+                        $("<option>").val(item.idRol).text(item.description)
                     )
                 });
-
-            }
-        })
-    fetch("/Taxes/GetTaxesForProducts")
-        .then(response => {
-            return response.ok ? response.json() : Promise.reject(response);
-        }).then(responseJson => {
-            if (responseJson.data.length > 0) {
-
-                responseJson.data.forEach((item) => {
-                    $("#cboTax").append(
-                        $("<option>").val(item.idTaxes).text(item.description)
-                    )
-                });
-
             }
         })
 
@@ -53,35 +30,41 @@ $(document).ready(function () {
     tableData = $("#tbData").DataTable({
         responsive: true,
         "ajax": {
-            "url": "/Inventory/GetProducts",
+            "url": "/Taxes/GetTaxes",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
             {
-                "data": "idProduct",
+                "data": "idTaxes",
                 "visible": false,
                 "searchable": false
             },
+           
+            { "data": "percentage" },
+            { "data": "description" },
             {
-                "data": "photoBase64", render: function (data) {
-                    return `<img style="height:60px;" src="data:image/png;base64,${data}" class="rounded mx-auto d-block" />`;
+                "data": "isFixed", render: function (data) {
+                    if (data == 1)
+                        return '<span class="badge badge-info">True</span>';
+                    else
+                        return '<span class="badge badge-danger">False</span>';
                 }
             },
-            { "data": "barCode" },
-            { "data": "brand" },
-            { "data": "description" },
-            { "data": "nameCategory" },
-            { "data": "quantity" },
-            { "data": "price" },
-            { "data": "totalPrice" },
-            { "data": "taxDescription" },
+            {
+                "data": "isExternal", render: function (data) {
+                    if (data == 1)
+                        return '<span class="badge badge-info">True</span>';
+                    else
+                        return '<span class="badge badge-danger">False</span>';
+                }
+            },
             {
                 "data": "isActive", render: function (data) {
                     if (data == 1)
-                        return '<span class="badge badge-info">Active</span>';
+                        return '<span class="badge badge-info">True</span>';
                     else
-                        return '<span class="badge badge-danger">Inactive</span>';
+                        return '<span class="badge badge-danger">False</span>';
                 }
             },
             {
@@ -99,7 +82,7 @@ $(document).ready(function () {
                 text: 'Export Excel',
                 extend: 'excelHtml5',
                 title: '',
-                filename: 'Report Products',
+                filename: 'Report Users',
                 exportOptions: {
                     columns: [2, 3, 4, 5, 6]
                 }
@@ -107,43 +90,21 @@ $(document).ready(function () {
         ]
     });
 })
-// Get a reference to the checkbox element
-
-
-
 
 const openModal = (model = BASIC_MODEL) => {
-    $("#txtId").val(model.idProduct);
-    $("#txtBarCode").val(model.barCode);
-    $("#txtBrand").val(model.brand);
-    $("#txtDescription").val(model.description);
-    $("#cboCategory").val(model.idCategory == 0 ? $("#cboCategory option:first").val() : model.idCategory);
-    $("#txtQuantity").val(model.quantity);
-    $("#txtPrice").val(model.price);
-    $("#txtTotalprice").val(model.quantity * model.price);
-    $("#cboTax").val(model.idTax);
-    $("#cboState").val(model.isActive);
-    $("#txtPhoto").val("");
-    $("#imgProduct").attr("src", `data:image/png;base64,${model.photoBase64}`);
+    $("#txtId").val(model.idTaxes);
+    $("#txtPercentage").val(model.percentage);
+    $("#txtDesc").val(model.description);
+    $("#cboFixed").val(model.isFixed);
+    $("#cboExternal").val(model.isExternal);
+    $("#cboActive").val(model.isActive);
 
     $("#modalData").modal("show")
 
 }
 
-$("#btnNewProduct").on("click", function () {
+$("#btnNewTax").on("click", function () {
     openModal()
-})
-
-
-$("#txtQuantity").on("change", function () {
-     pirice = $("#txtPrice").val();
-     qty = $("#txtQuantity").val();
-    $("#txtTotalprice").val(pirice * qty);
-})
-$("#txtPrice").on("change", function () {
-     pirice = $("#txtPrice").val();
-     qty = $("#txtQuantity").val();
-    $("#txtTotalprice").val(pirice * qty);
 })
 
 $("#btnSave").on("click", function () {
@@ -158,27 +119,21 @@ $("#btnSave").on("click", function () {
     }
 
     const model = structuredClone(BASIC_MODEL);
-    model["idProduct"] = parseInt($("#txtId").val());
-    model["barCode"] = $("#txtBarCode").val();
-    model["brand"] = $("#txtBrand").val();
-    model["description"] = $("#txtDescription").val();
-    model["idCategory"] = $("#cboCategory").val();
-    model["quantity"] = $("#txtQuantity").val();
-    model["price"] = $("#txtPrice").val();
-    model["Totalprice"] = $("#txtTotalprice").val();
-    model["idTax"] = $("#cboTax").val();
-    model["isActive"] = $("#cboState").val();
-    const inputPhoto = document.getElementById('txtPhoto');
+    model["idTaxes"] = parseInt($("#txtId").val());
+    model["percentage"] = $("#txtPercentage").val();
+    model["description"] = $("#txtDesc").val();
+    model["isFixed"] = $("#cboFixed").val();
+    model["isExternal"] = $("#cboExternal").val();
+    model["isActive"] = $("#cboActive").val();
 
     const formData = new FormData();
-    formData.append('photo', inputPhoto.files[0]);
     formData.append('model', JSON.stringify(model));
 
     $("#modalData").find("div.modal-content").LoadingOverlay("show")
 
 
-    if (model.idProduct == 0) {
-        fetch("/Inventory/CreateProduct", {
+    if (model.idTaxes == 0) {
+        fetch("/Taxes/CreateTax", {
             method: "POST",
             body: formData
         }).then(response => {
@@ -190,7 +145,7 @@ $("#btnSave").on("click", function () {
 
                 tableData.row.add(responseJson.object).draw(false);
                 $("#modalData").modal("hide");
-                swal("Successful!", "The product was created", "success");
+                swal("Successful!", "The user was created", "success");
 
             } else {
                 swal("We're sorry", responseJson.message, "error");
@@ -200,7 +155,7 @@ $("#btnSave").on("click", function () {
         })
     } else {
 
-        fetch("/Inventory/EditProduct", {
+        fetch("/Taxes/UpdateTax", {
             method: "PUT",
             body: formData
         }).then(response => {
@@ -212,7 +167,7 @@ $("#btnSave").on("click", function () {
                 tableData.row(rowSelected).data(responseJson.object).draw(false);
                 rowSelected = null;
                 $("#modalData").modal("hide");
-                swal("Successful!", "The product was modified", "success");
+                swal("Successful!", "The user was modified", "success");
 
             } else {
                 swal("We're sorry", responseJson.message, "error");
@@ -252,7 +207,7 @@ $("#tbData tbody").on("click", ".btn-delete", function () {
 
     swal({
         title: "¿Are you sure?",
-        text: `Delete the product "${data.description}"`,
+        text: `Delete Tax "${data.description}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -267,7 +222,7 @@ $("#tbData tbody").on("click", ".btn-delete", function () {
 
                 $(".showSweetAlert").LoadingOverlay("show")
 
-                fetch(`/Inventory/DeleteProduct?IdProduct=${data.idProduct}`, {
+                fetch(`/Taxes/DeleteTax?idTaxes=${data.idTaxes}`, {
                     method: "DELETE"
                 }).then(response => {
                     $(".showSweetAlert").LoadingOverlay("hide")
@@ -276,7 +231,7 @@ $("#tbData tbody").on("click", ".btn-delete", function () {
                     if (responseJson.state) {
 
                         tableData.row(row).remove().draw();
-                        swal("Successful!", "Product was deleted", "success");
+                        swal("Successful!", "User was deleted", "success");
 
                     } else {
                         swal("We're sorry", responseJson.message, "error");

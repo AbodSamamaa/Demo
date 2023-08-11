@@ -68,8 +68,20 @@ namespace PointOfSale.Utilities.Automapper
                 opt => opt.MapFrom(source => source.IdCategoryNavigation.Description)
             )
             .ForMember(destiny =>
+                destiny.TaxDescription,
+                opt => opt.MapFrom(source => source.IdTaxNavigation.Description)
+            )
+			//.ForMember(destiny =>
+			//	destiny.percentage,
+			//	opt => opt.MapFrom(source => source.IdTaxNavigation.Percentage)
+			//)
+			.ForMember(destiny =>
                 destiny.Price,
                 opt => opt.MapFrom(source => Convert.ToString(source.Price.Value, new CultureInfo("es-PE")))
+            )
+            .ForMember(destiny =>
+                destiny.TotalPrice,
+                opt => opt.MapFrom(source => Convert.ToString(source.TotalPrice.Value, new CultureInfo("es-PE")))
             )
             .ForMember(destiny =>
                 destiny.PhotoBase64,
@@ -83,6 +95,10 @@ namespace PointOfSale.Utilities.Automapper
             )
             .ForMember(destiny =>
                 destiny.IdCategoryNavigation,
+                opt => opt.Ignore()
+            )
+            .ForMember(destiny =>
+                destiny.IdTaxNavigation,
                 opt => opt.Ignore()
             )
             .ForMember(destiono =>
@@ -209,7 +225,21 @@ namespace PointOfSale.Utilities.Automapper
                 .ForMember(destiny =>
                 destiny.SubMenus,
                 opt => opt.MapFrom(source => source.InverseIdMenuParentNavigation));
-            #endregion Menu
-        }
-    }
+			#endregion Menu
+
+			#region Tax
+			CreateMap<VMTax, Tax>();
+			CreateMap<Tax, VMTax>()
+			.ForMember(destiny =>
+				destiny.IsFixed,
+				opt => opt.MapFrom(source => source.IsFixed == true ? 1 : 0)
+			)
+
+			.ForMember(destiny =>
+				destiny.Description,
+				opt => opt.MapFrom(source => source.Description)
+			);
+			#endregion
+		}
+	}
 }

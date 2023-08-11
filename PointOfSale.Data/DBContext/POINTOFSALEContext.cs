@@ -28,6 +28,7 @@ namespace PointOfSale.Data.DBContext
         public virtual DbSet<Sale> Sales { get; set; } = null!;
         public virtual DbSet<TypeDocumentSale> TypeDocumentSales { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<Tax> Tax { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
