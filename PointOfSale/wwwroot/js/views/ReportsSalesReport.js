@@ -4,6 +4,8 @@ $(document).ready(function () {
 
     $("#txtStartDate").datepicker({ dateFormat: 'dd/mm/yy' });
     $("#txtEndDate").datepicker({ dateFormat: 'dd/mm/yy' });
+    $("#txtStartDate").val(getCurrentDate());
+    $("#txtEndDate").val(getCurrentDate());
 
     tableData = $('#tbdata').DataTable({
         "processing": true,

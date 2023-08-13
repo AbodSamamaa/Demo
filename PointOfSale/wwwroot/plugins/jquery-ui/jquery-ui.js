@@ -18093,7 +18093,6 @@ $.widget( "ui.tabs", {
 				}
 				panel.attr( "aria-live", "polite" );
 			}
-
 			if ( panel.length ) {
 				that.panels = that.panels.add( panel );
 			}

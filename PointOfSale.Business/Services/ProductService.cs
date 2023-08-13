@@ -18,12 +18,16 @@ namespace PointOfSale.Business.Services
             _repository = repository;
         }
 
-        public async Task<List<Product>> List()
-        {
-            IQueryable<Product> query = await _repository.Query();
-            return query.Include(c => c.IdCategoryNavigation).ToList();
-        }
-        public async Task<Product> Add(Product entity)
+		public async Task<List<Product>> List()
+		{
+			IQueryable<Product> query = await _repository.Query();
+			return query
+				.Include(c => c.IdCategoryNavigation)
+				.Include(t => t.IdTaxNavigation)
+				.ToList();
+		}
+
+		public async Task<Product> Add(Product entity)
         {
             Product product_exists = await _repository.Get(p => p.BarCode == entity.BarCode);
 
@@ -64,8 +68,10 @@ namespace PointOfSale.Business.Services
                 product_edit.Brand = entity.Brand;
                 product_edit.Description = entity.Description;
                 product_edit.IdCategory = entity.IdCategory;
+                product_edit.IdTax = entity.IdTax;
                 product_edit.Quantity = entity.Quantity;
                 product_edit.Price = entity.Price;
+                product_edit.TotalPrice = entity.TotalPrice;
                 if (entity.Photo != null && entity.Photo.Length > 0)
                     product_edit.Photo = entity.Photo;
                 product_edit.IsActive = entity.IsActive;

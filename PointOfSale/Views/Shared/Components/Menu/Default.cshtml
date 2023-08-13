@@ -8,9 +8,13 @@
     string menucollapse = "menucollapse";
     int correlative = 1;
 }
-
+<div id="dvSearch">
+    <input type='text' id='txtSearch' onkeyup='Search()' placeholder='Search' class='form-control' style="border-color:#3899C2" />
+    <span id="clearSearch" onclick="clearText()" style="position: absolute; right: 5px; top: 12%; cursor: pointer;">X</span>
+</div>
+<br />
  @foreach (var menu in Model){
-
+     
     <li class="has-sub">
       <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="@($"#{menucollapse}{correlative}")"
         aria-expanded="false" aria-controls="dashboard">
@@ -36,8 +40,27 @@
      correlative = correlative + 1;
 
 }
+<script>
+    function Search() {
+        var searchValue = $('#txtSearch').val().toLowerCase(); // Get the value of the search input and convert to lowercase
+        $('.has-sub').each(function () {
+            var menuText = $(this).find('.sidenav-item-link').text().toLowerCase(); // Get the text of the main menu item and convert to lowercase
+            var isSearchMatch = menuText.indexOf(searchValue) > -1; // Check if the search value is present in the main menu item text
+            $(this).toggle(isSearchMatch); // Show or hide the main menu item based on the search result
 
-
+            var subMenuItems = $(this).find('.sub-menu li'); // Get all sub-menu items under the main menu item
+            subMenuItems.each(function () {
+                var subMenuText = $(this).find('.sidenav-item-link').text().toLowerCase(); // Get the text of the sub-menu item and convert to lowercase
+                var isSubSearchMatch = subMenuText.indexOf(searchValue) > -1; // Check if the search value is present in the sub-menu item text
+                $(this).toggle(isSearchMatch || isSubSearchMatch); // Show or hide the sub-menu item based on the search result of the main menu or the sub-menu
+            });
+        });
+    }
+    function clearText() {
+        $('#txtSearch').val(''); // Clear the search input field
+        Search(); // Call Search to reset the menu visibility based on the cleared search
+    }
+</script>
 
 
 

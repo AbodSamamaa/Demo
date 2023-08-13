@@ -216,8 +216,13 @@
     </div> <!-- End Page Wrapper -->
   </div> <!-- End Wrapper -->
 
+    <!-- Include NProgress library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+
+    
 
     <!-- Javascript -->
+
     <script src="~/plugins/jquery/jquery.min.js"></script>
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sleek.js"></script>
@@ -233,3 +238,14 @@
 </html>
 @*@RenderBody()
 *@
+<script>
+    function getCurrentDate() {
+        var today = new Date();
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        var year = today.getFullYear();
+
+        return day + '/' + month + '/' + year;
+    }
+
+</script>
