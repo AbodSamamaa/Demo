@@ -86,6 +86,45 @@ namespace PointOfSale.Data.Migrations
                     b.ToTable("CorrelativeNumber", (string)null);
                 });
 
+            modelBuilder.Entity("PointOfSale.Model.DetailPurchase", b =>
+                {
+                    b.Property<int>("IdDetailPurchase")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDetailPurchase"));
+
+                    b.Property<string>("BrandCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IdCategory")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdPurchase")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("IdDetailPurchase");
+
+                    b.HasIndex("IdPurchase");
+
+                    b.ToTable("DetailPurchases");
+                });
+
             modelBuilder.Entity("PointOfSale.Model.DetailSale", b =>
                 {
                     b.Property<int>("IdDetailSale")
@@ -260,6 +299,31 @@ namespace PointOfSale.Data.Migrations
                     b.ToTable("Negocio", (string)null);
                 });
 
+            modelBuilder.Entity("PointOfSale.Model.Payment", b =>
+                {
+                    b.Property<int?>("IdPayment")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdPayment"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("IdPayment");
+
+                    b.ToTable("Payment");
+                });
+
             modelBuilder.Entity("PointOfSale.Model.Product", b =>
                 {
                     b.Property<int>("IdProduct")
@@ -327,6 +391,87 @@ namespace PointOfSale.Data.Migrations
                     b.HasIndex("IdTax");
 
                     b.ToTable("Product", (string)null);
+                });
+
+            modelBuilder.Entity("PointOfSale.Model.Purchase", b =>
+                {
+                    b.Property<int>("IdPurchase")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPurchase"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BarCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("IdCategory")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdPaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdTypeDocumentPurchase")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUsers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PurchaseNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SellerDocument")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("TotalTaxes")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("IdPurchase");
+
+                    b.HasIndex("IdCategory");
+
+                    b.HasIndex("IdPaymentMethod");
+
+                    b.HasIndex("IdTypeDocumentPurchase");
+
+                    b.HasIndex("IdUsers");
+
+                    b.ToTable("Purchases");
                 });
 
             modelBuilder.Entity("PointOfSale.Model.Rol", b =>
@@ -418,6 +563,9 @@ namespace PointOfSale.Data.Migrations
                         .HasColumnType("varchar(10)")
                         .HasColumnName("customerDocument");
 
+                    b.Property<decimal?>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("IdTypeDocumentSale")
                         .HasColumnType("int")
                         .HasColumnName("idTypeDocumentSale");
@@ -487,7 +635,29 @@ namespace PointOfSale.Data.Migrations
 
                     b.HasKey("IdTax");
 
-                    b.ToTable("Tax", (string)null);
+                    b.ToTable("Tax");
+                });
+
+            modelBuilder.Entity("PointOfSale.Model.TypeDocumentPurchase", b =>
+                {
+                    b.Property<int>("IdTypeDocumentPurchase")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTypeDocumentPurchase"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("IdTypeDocumentPurchase");
+
+                    b.ToTable("TypeDocumentPurchases");
                 });
 
             modelBuilder.Entity("PointOfSale.Model.TypeDocumentSale", b =>
@@ -577,7 +747,16 @@ namespace PointOfSale.Data.Migrations
 
                     b.HasIndex("IdRol");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PointOfSale.Model.DetailPurchase", b =>
+                {
+                    b.HasOne("PointOfSale.Model.Purchase", "IdPurchaseNavigation")
+                        .WithMany("DetailPurchases")
+                        .HasForeignKey("IdPurchase");
+
+                    b.Navigation("IdPurchaseNavigation");
                 });
 
             modelBuilder.Entity("PointOfSale.Model.DetailSale", b =>
@@ -614,6 +793,33 @@ namespace PointOfSale.Data.Migrations
                     b.Navigation("IdCategoryNavigation");
 
                     b.Navigation("IdTaxNavigation");
+                });
+
+            modelBuilder.Entity("PointOfSale.Model.Purchase", b =>
+                {
+                    b.HasOne("PointOfSale.Model.Category", "IdCategoryNavigation")
+                        .WithMany()
+                        .HasForeignKey("IdCategory");
+
+                    b.HasOne("PointOfSale.Model.Payment", "IdPaymentMethodNavigation")
+                        .WithMany()
+                        .HasForeignKey("IdPaymentMethod");
+
+                    b.HasOne("PointOfSale.Model.TypeDocumentPurchase", "IdTypeDocumentNavigation")
+                        .WithMany("Purchases")
+                        .HasForeignKey("IdTypeDocumentPurchase");
+
+                    b.HasOne("PointOfSale.Model.User", "IdUsersNavigation")
+                        .WithMany()
+                        .HasForeignKey("IdUsers");
+
+                    b.Navigation("IdCategoryNavigation");
+
+                    b.Navigation("IdPaymentMethodNavigation");
+
+                    b.Navigation("IdTypeDocumentNavigation");
+
+                    b.Navigation("IdUsersNavigation");
                 });
 
             modelBuilder.Entity("PointOfSale.Model.RolMenu", b =>
@@ -672,6 +878,11 @@ namespace PointOfSale.Data.Migrations
                     b.Navigation("RolMenus");
                 });
 
+            modelBuilder.Entity("PointOfSale.Model.Purchase", b =>
+                {
+                    b.Navigation("DetailPurchases");
+                });
+
             modelBuilder.Entity("PointOfSale.Model.Rol", b =>
                 {
                     b.Navigation("RolMenus");
@@ -687,6 +898,11 @@ namespace PointOfSale.Data.Migrations
             modelBuilder.Entity("PointOfSale.Model.Tax", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PointOfSale.Model.TypeDocumentPurchase", b =>
+                {
+                    b.Navigation("Purchases");
                 });
 
             modelBuilder.Entity("PointOfSale.Model.TypeDocumentSale", b =>

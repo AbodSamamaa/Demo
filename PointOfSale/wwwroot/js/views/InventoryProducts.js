@@ -17,10 +17,9 @@ const BASIC_MODEL = {
     photo: ""
 }
 
-
 $(document).ready(function () {
-
-    fetch("/Inventory/GetCategories")
+    dds
+    fetch("/Inventdsaory/GetCategories")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         }).then(responseJson => {
@@ -206,7 +205,7 @@ $("#btnSave").on("click", function () {
         }).then(response => {
             $("#modalData").find("div.modal-content").LoadingOverlay("hide")
             return response.ok ? response.json() : Promise.reject(response);
-        }).then(responseJson => {
+        }).then(responseJson => {``
             if (responseJson.state) {
 
                 tableData.row(rowSelected).data(responseJson.object).draw(false);

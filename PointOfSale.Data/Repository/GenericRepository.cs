@@ -38,11 +38,15 @@ namespace PointOfSale.Data.Repository
                 await _dbcontext.SaveChangesAsync();
                 return entity;
             }
-            catch
+            catch (DbUpdateException ex)
             {
+                // Log the exception details or inspect the inner exception
+                var innerException = ex.InnerException;
+                // Handle the exception or rethrow it if needed
                 throw;
             }
         }
+
 
         public async Task<bool> Edit(TEntity entity)
         {

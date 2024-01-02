@@ -56,8 +56,8 @@ namespace PointOfSale.Controllers
             };
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), properties);
-
-            return RedirectToAction("Index", "Home");
+            
+			return RedirectToAction("Index", "Home");
 
 
         }

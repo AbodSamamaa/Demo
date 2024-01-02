@@ -107,6 +107,7 @@ $("#tbsale tbody").on("click", ".btn-info", function () {
     $("#txtClientName").val(d.clientName)
     $("#txtSubTotal").val(d.subtotal)
     $("#txtTaxes").val(d.totalTaxes)
+    $("#txtTDiscount").val(d.discount)
     $("#txtTotal").val(d.total)
 
     $("#tbProducts tbody").html("")

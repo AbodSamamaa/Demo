@@ -107,6 +107,10 @@ namespace PointOfSale.Utilities.Automapper
             CreateMap<TypeDocumentSale, VMTypeDocumentSale>().ReverseMap();
             #endregion
 
+            #region TypeDocumentPurchase
+            CreateMap<TypeDocumentPurchase, VMTypeDocumentPurchase>().ReverseMap();
+            #endregion
+
             #region Sale
             CreateMap<Sale, VMSale>()
                 .ForMember(destiny =>
@@ -134,6 +138,47 @@ namespace PointOfSale.Utilities.Automapper
                 );
 
             CreateMap<VMSale, Sale>()
+                .ForMember(destiny =>
+                    destiny.Subtotal,
+                    opt => opt.MapFrom(source => Convert.ToDecimal(source.Subtotal, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.TotalTaxes,
+                    opt => opt.MapFrom(source => Convert.ToDecimal(source.TotalTaxes, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Total,
+                    opt => opt.MapFrom(source => Convert.ToDecimal(source.Total, new CultureInfo("es-PE")))
+                );
+            #endregion
+            
+            #region Purchase
+            CreateMap<Purchase, VMPurchase>()
+                .ForMember(destiny =>
+                    destiny.IdTypeDocumentPurchase,
+                    opt => opt.MapFrom(source => source.IdTypeDocumentNavigation.Description)
+                )
+                .ForMember(destiny =>
+                    destiny.IdUsers,
+                    opt => opt.MapFrom(source => source.IdUsersNavigation.Name)
+                )
+                .ForMember(destiny =>
+                    destiny.Subtotal,
+                    opt => opt.MapFrom(source => Convert.ToString(source.Subtotal.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.TotalTaxes,
+                    opt => opt.MapFrom(source => Convert.ToString(source.TotalTaxes.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Total,
+                    opt => opt.MapFrom(source => Convert.ToString(source.Total.Value, new CultureInfo("es-PE")))
+                ).ForMember(destiny =>
+                    destiny.RegistrationDate,
+                    opt => opt.MapFrom(source => source.RegistrationDate.Value.ToString("dd/MM/yyyy"))
+                );
+
+            CreateMap<VMPurchase, Purchase>()
                 .ForMember(destiny =>
                     destiny.Subtotal,
                     opt => opt.MapFrom(source => Convert.ToDecimal(source.Subtotal, new CultureInfo("es-PE")))
@@ -199,6 +244,10 @@ namespace PointOfSale.Utilities.Automapper
                     opt => opt.MapFrom(source => Convert.ToString(source.IdSaleNavigation.TotalTaxes.Value, new CultureInfo("es-PE")))
                 )
                 .ForMember(destiny =>
+                    destiny.Discount,
+                    opt => opt.MapFrom(source => Convert.ToString(source.IdSaleNavigation.Discount.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
                     destiny.TotalSale,
                     opt => opt.MapFrom(source => Convert.ToString(source.IdSaleNavigation.Total.Value, new CultureInfo("es-PE")))
                 )
@@ -208,6 +257,74 @@ namespace PointOfSale.Utilities.Automapper
                 )
                 .ForMember(destiny =>
                     destiny.Price,
+                    opt => opt.MapFrom(source => Convert.ToString(source.Price.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Total,
+                    opt => opt.MapFrom(source => Convert.ToString(source.Total.Value, new CultureInfo("es-PE")))
+                );
+            #endregion
+            
+            #region DetailPurchase
+            CreateMap<DetailPurchase, VMDetailPurchase>()
+                .ForMember(destiny =>
+                    destiny.Price,
+                    opt => opt.MapFrom(source => Convert.ToString(source.Price.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Total,
+                    opt => opt.MapFrom(source => Convert.ToString(source.Total.Value, new CultureInfo("es-PE")))
+                );
+
+            CreateMap<VMDetailPurchase, DetailPurchase>()
+                .ForMember(destiny =>
+                    destiny.Price,
+                    opt => opt.MapFrom(source => Convert.ToDecimal(source.Price, new CultureInfo("es-PE")))
+                );
+
+            CreateMap<DetailPurchase, VMPurchasesReport>()
+                .ForMember(destiny =>
+                    destiny.RegistrationDate,
+                    opt => opt.MapFrom(source => source.IdPurchaseNavigation.RegistrationDate.Value.ToString("dd/MM/yyyy"))
+                )
+                .ForMember(destiny =>
+                    destiny.PurchaseNumber,
+                    opt => opt.MapFrom(source => source.IdPurchaseNavigation.PurchaseNumber)
+                )
+                .ForMember(destiny =>
+                    destiny.DocumentType,
+                    opt => opt.MapFrom(source => source.IdPurchaseNavigation.IdTypeDocumentNavigation.Description)
+                )
+                .ForMember(destiny =>
+                    destiny.SellerDocument,
+                    opt => opt.MapFrom(source => source.IdPurchaseNavigation.SellerDocument)
+                )
+                .ForMember(destiny =>
+                    destiny.SellerName,
+                    opt => opt.MapFrom(source => source.IdPurchaseNavigation.SellerName)
+                )
+                .ForMember(destiny =>
+                    destiny.Subtotal,
+                    opt => opt.MapFrom(source => Convert.ToString(source.IdPurchaseNavigation.Subtotal.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.TotalTaxes,
+                    opt => opt.MapFrom(source => Convert.ToString(source.IdPurchaseNavigation.TotalTaxes.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Discount,
+                    opt => opt.MapFrom(source => Convert.ToString(source.IdPurchaseNavigation.Discount.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Total,
+                    opt => opt.MapFrom(source => Convert.ToString(source.IdPurchaseNavigation.Total.Value, new CultureInfo("es-PE")))
+                )
+                .ForMember(destiny =>
+                    destiny.Category,
+                    opt => opt.MapFrom(source => source.DescriptionCategory)
+                )
+                .ForMember(destiny =>
+                    destiny.UnitPrice,
                     opt => opt.MapFrom(source => Convert.ToString(source.Price.Value, new CultureInfo("es-PE")))
                 )
                 .ForMember(destiny =>
@@ -229,6 +346,20 @@ namespace PointOfSale.Utilities.Automapper
 			.ForMember(destiny =>
 				destiny.IsFixed,
 				opt => opt.MapFrom(source => source.IsFixed == true ? 1 : 0)
+			)
+
+			.ForMember(destiny =>
+				destiny.Description,
+				opt => opt.MapFrom(source => source.Description)
+			);
+			#endregion
+            
+            #region Payment
+			CreateMap<VMPayment, Payment>();
+			CreateMap<Payment, VMPayment>()
+			.ForMember(destiny =>
+				destiny.IsActive,
+				opt => opt.MapFrom(source => source.IsActive == true ? 1 : 0)
 			)
 
 			.ForMember(destiny =>

@@ -13,19 +13,6 @@ const BASIC_MODEL = {
 
 $(document).ready(function () {
 
-    fetch("/Admin/GetRoles")
-        .then(response => {
-            return response.ok ? response.json() : Promise.reject(response);
-        }).then(responseJson => {
-            if (responseJson.length > 0) {
-                responseJson.forEach((item) => {
-                    $("#cboRol").append(
-                        $("<option>").val(item.idRol).text(item.description)
-                    )
-                });
-            }
-        })
-
 
     tableData = $("#tbData").DataTable({
         responsive: true,

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PointOfSale.Business.Contracts;
@@ -9,7 +10,8 @@ using PointOfSale.Utilities.Response;
 
 namespace PointOfSale.Controllers
 {
-	public class TaxesController : Controller
+    [Authorize]
+    public class TaxesController : Controller
 	{
 		private readonly IRolService _rolService;
 		private readonly ITaxService _TaxService;
@@ -61,7 +63,7 @@ namespace PointOfSale.Controllers
 			return StatusCode(StatusCodes.Status200OK, gResponse);
 		}
 		[HttpPut]
-		public async Task<IActionResult> UpdateTax([FromForm] IFormFile photo, [FromForm] string model)
+		public async Task<IActionResult> UpdateTax([FromForm] string model)
 		{
 			GenericResponse<VMTax> gResponse = new GenericResponse<VMTax>();
 			try

@@ -112,13 +112,5 @@ namespace PointOfSale.Business.Services
 				throw;
 			}
 		}
-
-		public async Task<Tax> GetById(int IdTax)
-		{
-
-			Tax Tax_found = await _repository.Get(u => u.IdTax == IdTax);
-
-			return Tax_found;
-		}
 	}
 }

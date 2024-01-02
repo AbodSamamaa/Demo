@@ -14,6 +14,5 @@ namespace PointOfSale.Business.Contracts
 		Task<Tax> Add(Tax entity);
 		Task<Tax> Edit(Tax entity);
 		Task<bool> Delete(int idTax);
-		Task<Tax> GetById(int IdTax);
 	}
 }

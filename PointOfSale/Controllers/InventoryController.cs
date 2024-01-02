@@ -61,7 +61,6 @@ namespace PointOfSale.Controllers
 
             return StatusCode(StatusCodes.Status200OK, gResponse);
         }
-
         [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromBody] VMCategory model)
         {
@@ -84,8 +83,6 @@ namespace PointOfSale.Controllers
 
             return StatusCode(StatusCodes.Status200OK, gResponse);
         }
-
-
         [HttpDelete]
         public async Task<IActionResult> DeleteCategory(int idCategory)
         {

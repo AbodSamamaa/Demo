@@ -4,5 +4,6 @@
     {
         public int IdTypeDocumentSale { get; set; }
         public string? Description { get; set; }
-    }
+		public int? IsActive { get; set; }
+	}
 }

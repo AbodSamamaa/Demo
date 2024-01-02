@@ -1,7 +1,7 @@
-﻿
-let TaxValue = 16;
+﻿let TaxValue = 16;
 let ProductsForSale = [];
 let StoockQTY = 0;
+let SelectedTax = 0;
 
 $(document).ready(function () {
 
@@ -19,6 +19,52 @@ $(document).ready(function () {
                 });
             }
         })
+
+    fetch("/Taxes/GetTaxesForProducts")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        }).then(responseJson => {
+            if (responseJson.data.length > 0) {
+
+                responseJson.data.forEach((item) => {
+                    $("#cboTax").append(
+                        $("<option>").val(item.idTax).text(item.description)
+                    )
+                    var cboTaxselectElement = document.getElementById("cboTax");
+                    var ddlselectedText = cboTaxselectElement.options[cboTaxselectElement.selectedIndex].text;
+                    if (ddlselectedText === "Fixed") {
+                        SelectedTax = 16;
+                    }
+                    else {
+                        SelectedTax = ddlselectedText;
+                    }
+                });
+            }
+        })
+    document.getElementById("cboTax").onchange = function () {
+            fetch("/Taxes/GetTaxesForProducts")
+                .then(response => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                }).then(responseJson => {
+                    if (responseJson.data.length > 0) {
+                        responseJson.data.forEach((item) => {
+                           
+                            var cboTaxselectElement = document.getElementById("cboTax");
+                            var ddlselectedText = cboTaxselectElement.options[cboTaxselectElement.selectedIndex].text;
+                            if (ddlselectedText === "Fixed") {
+                                SelectedTax = 16;
+                            }
+                            else {
+                                SelectedTax = ddlselectedText;
+                            }
+                        });
+                        
+                    }
+                })
+    };
+    document.getElementById("txtDiscount").onchange = function () {
+        showProducts_Prices();
+        };
 
     //fetch("/Negocio/Obtener")
     //    .then(response => {
@@ -172,12 +218,25 @@ $('#cboSearchProduct').on('select2:select', function (e) {
 function showProducts_Prices() {
 
     let total = 0;
+    let discount = $("#txtDiscount").val();
+    let discountStr = parseFloat(discount).toFixed(2);
+    let Ftotal = 0;
+    let FtotalwithTax = 0;
     let tax = 0;
     let subtotal = 0;
-    let percentage = TaxValue / 100;
-
+    let percentage = SelectedTax / 100;
+    if (isNaN(parseInt(discountStr))) {
+        toastr.warning("", "You must enter a valid value");
+        discountStr = 0;
+        $("#txtDiscount").val(0);
+        return false
+    }
+    if (discountStr < 0) {
+        toastr.warning("", "You must enter a valid value");
+        return false;
+    }
     $("#tbProduct tbody").html("")
-
+    
     ProductsForSale.forEach((item) => {
 
         total = total + parseFloat(item.total);
@@ -195,16 +254,21 @@ function showProducts_Prices() {
                 $("<td>").text(item.total)
             )
         )
-
     })
 
-    subtotal = total / (1 + percentage);
-    tax = total - subtotal;
-
+    /*subtotal = total / (percentage);*/
+    subtotal = total;
+    tax = subtotal * percentage;
+    Ftotal = subtotal + tax;
+    FtotalwithTax = subtotal + tax - discountStr;
+    var totl = $("#txtTotal").val();
+    if (parseFloat(discountStr) > parseFloat(totl)) {
+        toastr.warning("", "The discount cannot be higher than the total");
+      
+    }
     $("#txtSubTotal").val(subtotal.toFixed(2))
     $("#txtTotalTaxes").val(tax.toFixed(2))
-    $("#txtTotal").val(total.toFixed(2))
-
+    $("#txtTotal").val(FtotalwithTax.toFixed(2))
 }
 
 $(document).on("click", "button.btn-delete", function () {
@@ -216,9 +280,25 @@ $(document).on("click", "button.btn-delete", function () {
 })
 
 $("#btnFinalizeSale").click(function () {
-
+    let discount = $("#txtDiscount").val();
+    let discountStr = parseFloat(discount).toFixed(2);
+    var Total = $("#txtTotal").val();
+    if (isNaN(parseInt(discountStr))) {
+        toastr.warning("", "You must enter a valid value");
+        return false
+    }
+    if (discountStr < 0) {
+        toastr.warning("", "You must enter a valid value");
+        discountStr = 0;
+        $("#txtDiscount").val(0);
+        return false;
+    }
     if (ProductsForSale.length < 1) {
         toastr.warning("", "You must enter products");
+        return;
+    }
+    if (parseFloat(discountStr) > parseFloat(Total)) {
+        toastr.warning("", "The discount cannot be higher than the total");
         return;
     }
 
@@ -231,6 +311,7 @@ $("#btnFinalizeSale").click(function () {
         subtotal: $("#txtSubTotal").val(),
         totalTaxes: $("#txtTotalTaxes").val(),
         total: $("#txtTotal").val(),
+        discount: $("#txtDiscount").val(),
         detailSales: vmDetailSale
     }
 
@@ -255,6 +336,8 @@ $("#btnFinalizeSale").click(function () {
             $("#cboTypeDocumentSale").val($("#cboTypeDocumentSale option:first").val());
 
             swal("Registered!", `Sale Number : ${responseJson.object.saleNumber}`, "success");
+            $("#txtDiscount").val(0.00);
+            $("#txtTotal").val(0.00);
 
         } else {
             swal("We're sorry", "The sale could not be registered", "error");

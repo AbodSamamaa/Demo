@@ -22,6 +22,7 @@ $(document).ready(function () {
             { "data": "clientName" },
             { "data": "subTotalSale" },
             { "data": "taxTotalSale" },
+            { "data": "discount" },
             { "data": "totalSale" },
             { "data": "product" },
             { "data": "quantity" },

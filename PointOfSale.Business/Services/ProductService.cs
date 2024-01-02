@@ -42,7 +42,11 @@ namespace PointOfSale.Business.Services
                     throw new TaskCanceledException("Failed to create product");
 
                 IQueryable<Product> query = await _repository.Query(p => p.IdProduct == product_created.IdProduct);
-                product_created = query.Include(c => c.IdCategoryNavigation).First();
+                product_created = query
+                    .Include(c => c.IdCategoryNavigation)
+                    .Include(t => t.IdTaxNavigation)
+                    .First();
+
 
                 return product_created;
             }
@@ -75,12 +79,15 @@ namespace PointOfSale.Business.Services
                 if (entity.Photo != null && entity.Photo.Length > 0)
                     product_edit.Photo = entity.Photo;
                 product_edit.IsActive = entity.IsActive;
-
                 bool response = await _repository.Edit(product_edit);
                 if (!response)
                     throw new TaskCanceledException("The product could not be modified");
 
-                Product product_edited = queryProduct.Include(c => c.IdCategoryNavigation).First();
+                Product product_edited = queryProduct
+                 .Include(c => c.IdCategoryNavigation)
+                 .Include(t => t.IdTaxNavigation)
+                 .First();
+
 
                 return product_edited;
             }

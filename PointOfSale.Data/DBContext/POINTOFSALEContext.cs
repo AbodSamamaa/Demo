@@ -20,15 +20,19 @@ namespace PointOfSale.Data.DBContext
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<CorrelativeNumber> CorrelativeNumbers { get; set; } = null!;
         public virtual DbSet<DetailSale> DetailSales { get; set; } = null!;
+        public virtual DbSet<DetailPurchase> DetailPurchases { get; set; } = null!;
         public virtual DbSet<Menu> Menus { get; set; } = null!;
         public virtual DbSet<Negocio> Negocios { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<RolMenu> RolMenus { get; set; } = null!;
         public virtual DbSet<Sale> Sales { get; set; } = null!;
+        public virtual DbSet<Purchase> Purchases { get; set; } = null!;
         public virtual DbSet<TypeDocumentSale> TypeDocumentSales { get; set; } = null!;
+        public virtual DbSet<TypeDocumentPurchase> TypeDocumentPurchases { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Tax> Tax { get; set; } = null!;
+        public virtual DbSet<Payment> Payment { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

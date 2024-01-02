@@ -9,6 +9,7 @@
         public string? ClientName { get; set; }
         public string? SubTotalSale { get; set; }
         public string? TaxTotalSale { get; set; }
+        public string? Discount { get; set; }
         public string? TotalSale { get; set; }
         public string? Product { get; set; }
         public int Quantity { get; set; }
